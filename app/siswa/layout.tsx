@@ -1,7 +1,12 @@
 
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import {
+  ReactNode,
+  Suspense,
+  useEffect,
+  useState,
+} from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
@@ -11,7 +16,7 @@ type ProfilSiswa = {
   foto_url: string | null;
 };
 
-export default function SiswaLayout({
+function SiswaLayoutContent({
   children,
 }: {
   children: ReactNode;
@@ -391,5 +396,26 @@ export default function SiswaLayout({
         {children}
       </main>
     </div>
+  );
+}
+
+// PEMBUNGKUS SUSPENSE UNTUK usePathname()
+export default function SiswaLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-slate-100">
+          <p className="text-sm font-medium text-slate-600">
+            Memuat halaman siswa...
+          </p>
+        </div>
+      }
+    >
+      <SiswaLayoutContent>{children}</SiswaLayoutContent>
+    </Suspense>
   );
 }

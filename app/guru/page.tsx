@@ -31,32 +31,45 @@ export default function DashboardGuru() {
   const [memuatData, setMemuatData] = useState(true);
   const [namaGuru, setNamaGuru] = useState("Guru");
 
+  const [tanggalHariIni, setTanggalHariIni] = useState("");
+
   const [jumlahMateri, setJumlahMateri] = useState(0);
   const [jumlahTugas, setJumlahTugas] = useState(0);
   const [jumlahPengumpulan, setJumlahPengumpulan] = useState(0);
   const [jumlahBelumDinilai, setJumlahBelumDinilai] = useState(0);
 
   const [siswa, setSiswa] = useState<SiswaMenunggu[]>([]);
-
   const [materiTerbaru, setMateriTerbaru] = useState<MateriTerbaru[]>([]);
   const [tugasTerbaru, setTugasTerbaru] = useState<TugasTerbaru[]>([]);
 
   const [memverifikasi, setMemverifikasi] = useState<string | null>(null);
   const [pesan, setPesan] = useState("");
 
-  const tanggalHariIni = new Intl.DateTimeFormat("id-ID", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date());
+  // Tanggal hari ini diambil setelah halaman berjalan di browser.
+  useEffect(() => {
+    setTanggalHariIni(
+      new Intl.DateTimeFormat("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(new Date())
+    );
+  }, []);
 
+  // Format tanggal tugas dengan pengaman tanggal tidak valid.
   function formatTanggal(tanggal: string) {
+    const tanggalObj = new Date(tanggal);
+
+    if (Number.isNaN(tanggalObj.getTime())) {
+      return "-";
+    }
+
     return new Intl.DateTimeFormat("id-ID", {
       day: "numeric",
       month: "short",
       year: "numeric",
-    }).format(new Date(tanggal));
+    }).format(tanggalObj);
   }
 
   async function ambilDataDashboard() {
@@ -290,7 +303,6 @@ export default function DashboardGuru() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-7">
-
       {/* HEADER DASHBOARD */}
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -329,7 +341,7 @@ export default function DashboardGuru() {
           </h2>
 
           <p className="mt-2 text-sm font-medium text-orange-300">
-            {tanggalHariIni}
+            {tanggalHariIni || "Memuat tanggal..."}
           </p>
 
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-200 sm:text-base">
@@ -369,7 +381,6 @@ export default function DashboardGuru() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
-
           {/* MENUNGGU PERSETUJUAN */}
           <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
             <div className="flex items-center justify-between">
@@ -511,7 +522,6 @@ export default function DashboardGuru() {
               Periksa pengumpulan →
             </p>
           </article>
-
         </div>
       </section>
 
@@ -528,7 +538,6 @@ export default function DashboardGuru() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-
           {/* MATERI TERBARU */}
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="mb-4 flex items-center justify-between">
@@ -652,7 +661,6 @@ export default function DashboardGuru() {
               </div>
             )}
           </div>
-
         </div>
       </section>
 
@@ -669,7 +677,6 @@ export default function DashboardGuru() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-
           <button
             type="button"
             onClick={() => bukaHalaman("/guru/materi")}
@@ -773,7 +780,6 @@ export default function DashboardGuru() {
               </span>
             </div>
           </button>
-
         </div>
       </section>
 
@@ -896,7 +902,6 @@ export default function DashboardGuru() {
         <span className="mx-2">•</span>
         Sistem Pembelajaran Teknik Kendaraan Ringan
       </footer>
-
     </div>
   );
 }
