@@ -122,7 +122,12 @@ export default function LoginGuru() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+              style={{
+                color: "#0f172a",
+                backgroundColor: "#ffffff",
+                colorScheme: "light",
+              }}
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 placeholder:text-slate-400 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
               placeholder="Masukkan email akun"
             />
           </div>
@@ -143,7 +148,12 @@ export default function LoginGuru() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 pr-24 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                style={{
+                  color: "#0f172a",
+                  backgroundColor: "#ffffff",
+                  colorScheme: "light",
+                }}
+                className="w-full rounded-xl border border-slate-300 px-4 py-3 pr-24 text-slate-900 placeholder:text-slate-400 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                 placeholder="Masukkan kata sandi"
               />
 

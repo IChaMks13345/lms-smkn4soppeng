@@ -29,6 +29,7 @@ function SiswaLayoutContent({
   const [loading, setLoading] = useState(true);
   const [menuTerbuka, setMenuTerbuka] = useState(false);
   const [notifikasiPenilaian, setNotifikasiPenilaian] = useState(false);
+  const [sedangLogout, setSedangLogout] = useState(false);
 
   // MEMERIKSA AKUN SISWA
   useEffect(() => {
@@ -135,8 +136,27 @@ function SiswaLayoutContent({
 
   // KELUAR DARI APLIKASI
   async function keluar() {
-    await supabase.auth.signOut();
+    if (sedangLogout) return;
+
+    const yakin = window.confirm(
+      "Apakah Anda yakin ingin keluar dari LMS?"
+    );
+
+    if (!yakin) return;
+
+    setSedangLogout(true);
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      alert("Gagal keluar: " + error.message);
+      setSedangLogout(false);
+      return;
+    }
+
+    setMenuTerbuka(false);
     router.replace("/login");
+    router.refresh();
   }
 
   // MENU NAVIGASI SISWA
@@ -379,10 +399,11 @@ function SiswaLayoutContent({
           <button
             type="button"
             onClick={keluar}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-300 transition hover:bg-red-600 hover:text-white"
+            disabled={sedangLogout}
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-300 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span>↪</span>
-            Keluar dari Aplikasi
+            {sedangLogout ? "Sedang Keluar..." : "Keluar dari Aplikasi"}
           </button>
 
           <p className="mt-4 text-center text-[10px] text-slate-500">

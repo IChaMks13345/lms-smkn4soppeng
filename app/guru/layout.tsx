@@ -20,6 +20,7 @@ export default function LayoutGuru({
   const [foto, setFoto] = useState("");
   const [memuat, setMemuat] = useState(true);
   const [jumlahBelumDinilai, setJumlahBelumDinilai] = useState(0);
+  const [sedangLogout, setSedangLogout] = useState(false);
 
   useEffect(() => {
     async function muatProfilGuru() {
@@ -58,6 +59,28 @@ export default function LayoutGuru({
 
     void muatProfilGuru();
   }, [router]);
+
+  // LOGOUT GURU
+  async function handleLogout() {
+    const yakin = window.confirm(
+      "Apakah Bossku yakin ingin keluar dari LMS?"
+    );
+
+    if (!yakin) return;
+
+    setSedangLogout(true);
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      alert("Gagal keluar: " + error.message);
+      setSedangLogout(false);
+      return;
+    }
+
+    router.replace("/login");
+    router.refresh();
+  }
 
   // MENGHITUNG DAN MEMANTAU PENGUMPULAN SECARA REAL-TIME
   useEffect(() => {
@@ -209,6 +232,19 @@ export default function LayoutGuru({
               </Link>
             );
           })}
+
+          {/* TOMBOL LOGOUT */}
+          <button
+            type="button"
+            onClick={handleLogout}
+            disabled={sedangLogout}
+            className="mt-5 flex w-full items-center gap-3 rounded-lg border border-red-400/40 px-4 py-3 text-left text-sm font-semibold text-red-300 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <span>🚪</span>
+            <span>
+              {sedangLogout ? "Sedang keluar..." : "Keluar (Logout)"}
+            </span>
+          </button>
         </nav>
       </aside>
 
